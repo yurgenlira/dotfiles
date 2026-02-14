@@ -1,0 +1,10 @@
+---
+- name: Ensure basic packages are installed
+  ansible.builtin.apt:
+    name:
+      - curl
+      - git
+      - nano
+      - htop
+    state: present
+    update_cache: yes

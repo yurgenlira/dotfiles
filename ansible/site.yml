@@ -1,0 +1,7 @@
+---
+- name: Configure System
+  hosts: localhost
+  connection: local
+  become: true
+  roles:
+    - common

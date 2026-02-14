@@ -1,0 +1,19 @@
+{{- $email := "your-email@example.com" -}}
+{{- $agekey := true -}}
+
+[data]
+    email = {{ $email | quote }}
+
+[bitwarden]
+    command = "bw"
+
+[encryption]
+    tool = "age"
+[age]
+    identity = "~/.config/chezmoi/key.txt"
+    recipient = "age1..." # Replace with your public key generated during bootstrap
+
+[git]
+    autoAdd = true
+    autoCommit = true
+    autoPush = true

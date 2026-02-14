@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# run_once_after_ansible.sh.tmpl - Run Ansible playbooks
+
+echo "Running Ansible playbooks..."
+ansible-playbook {{ .chezmoi.sourceDir }}/ansible/site.yml --ask-become-pass
