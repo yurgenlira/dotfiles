@@ -1,0 +1,8 @@
+# Exclude repository metadata and scripts from the target home directory
+.git/
+.github/
+.gitignore
+README.md
+ansible/
+bootstrap.sh
+run_once_after_ansible.sh.tmpl

@@ -1,0 +1,22 @@
+# Avoid committing actual secrets if they ever exist locally
+.ssh/id_*
+.ssh/*.pem
+.ssh/*.key
+!.ssh/*.tmpl
+
+# System
+.DS_Store
+Thumbs.db
+*~
+*.swp
+
+# Ansible
+*.retry
+*.log
+
+# Editors
+.vscode/
+.idea/
+
+# Chezmoi (optional, if you have local-only files)
+.chezmoi.yaml.tmpl
