@@ -4,16 +4,22 @@ Managed with [chezmoi](https://www.chezmoi.io/) + [Ansible](https://www.ansible.
 
 ## Bootstrap
 
-To set up a new machine, run:
+To set up a new machine, first ensure `curl` is installed:
 
 ```bash
-sh -c "$(curl -fsLS https://raw.githubusercontent.com/{{ .chezmoi.username }}/dotfiles/main/bootstrap.sh)"
+sudo apt update && sudo apt install -y curl
+```
+
+Then run:
+
+```bash
+bash -c "$(curl -fsLS https://raw.githubusercontent.com/yurgenlira/dotfiles/main/bootstrap.sh)"
 ```
 
 Then initialize chezmoi:
 
 ```bash
-chezmoi init --apply {{ .chezmoi.username }}
+chezmoi init --apply yurgenlira
 ```
 
 ## Structure
