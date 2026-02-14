@@ -46,4 +46,4 @@ if [ ! -f "$HOME/.config/chezmoi/key.txt" ]; then
 fi
 
 echo "Bootstrap complete. You can now run:"
-echo "chezmoi init --apply <your-github-username>"
+echo "chezmoi init --apply --branch test/vm-setup <your-github-username>"
