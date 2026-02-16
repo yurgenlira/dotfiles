@@ -37,7 +37,7 @@ if ! command -v chezmoi >/dev/null 2>&1 && [ ! -f /snap/bin/chezmoi ]; then
 fi
 
 # 5. Bitwarden Login
-if ! bw status | grep -q "authenticated"; then
+if ! bw status | grep -q '"status":"authenticated"'; then
     echo "Logging into Bitwarden..."
     bw login
 fi
