@@ -13,6 +13,8 @@
 {{-   $work_email = promptStringOnce . "work_email" "Work Email" "" -}}
 {{- end -}}
 
+encryption = "age"
+
 [data]
     name = {{ $name | quote }}
     machine_type = {{ $machine_type | quote }}
@@ -24,8 +26,6 @@
 [bitwarden]
     command = "bw"
     unlock = "auto"
-
-encryption = "age"
 
 [age]
     identity = "~/.config/chezmoi/key.txt"
