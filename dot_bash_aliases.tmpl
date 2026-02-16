@@ -1,0 +1,84 @@
+# basic
+alias ll='ls -l'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias tailf='tail -f'
+
+# network
+alias myip='curl -s ipinfo.io/ip'
+alias myipv6='curl -s ifconfig.me'
+alias ports='ss -puntl'
+alias psgrep='ps aux | grep'
+alias netgrep='ss -puntl | grep'
+
+# safety
+alias rm='rm -I'
+alias cp='cp -i'
+alias mv='mv -i'
+alias ln='ln -i'
+
+# system
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias h='history'
+alias j='jobs -l'
+alias c='clear'
+alias df='df -h'
+alias du='du -h'
+alias free='free -h'
+
+# git
+alias gs='git status'
+alias gco='git checkout'
+alias gcm='git commit -m'
+alias gps='git push'
+alias gpl='git pull'
+alias gb='git branch'
+alias gd='git diff'
+alias gl='git log --oneline'
+alias ga='git add'
+alias git_clean_branches='git remote prune origin && git branch --merged | grep -v "\*" | xargs -n 1 git branch -d'
+
+{{- if eq .chezmoi.os "linux" }}
+# package manager
+alias install='sudo apt install'
+alias update='sudo apt update'
+alias upgrade='sudo apt upgrade'
+alias search='apt search'
+alias show='apt show'
+{{- end }}
+
+# Other
+alias backup='rsync -av --progress'
+
+{{- if and (eq .chezmoi.os "linux") (contains "microsoft" .chezmoi.kernel.osrelease) }}
+## WSL
+
+# Windows interop aliases
+alias cmd='cmd.exe /c'
+alias powershell='powershell.exe'
+alias pwsh='pwsh.exe'
+alias explorer='explorer.exe'
+alias notepad='notepad.exe'
+alias open='explorer.exe'
+
+# Quick Windows paths
+alias cdwin='cd /mnt/c/Users/{{ .chezmoi.username }}'
+alias cddownloads='cd /mnt/c/Users/{{ .chezmoi.username }}/Downloads'
+alias cddesktop='cd /mnt/c/Users/{{ .chezmoi.username }}/Desktop'
+alias cddocuments='cd /mnt/c/Users/{{ .chezmoi.username }}/OneDrive/Documentos'
+alias cdhome='cd /home/{{ .chezmoi.username }}'
+
+{{- if or (eq .machine_type "work") (eq .machine_type "hybrid") }}
+# Work-specific WSL aliases
+alias work-explorer='explorer.exe /mnt/c/Users/{{ .chezmoi.username }}/OneDrive/Documentos/work'
+alias cdwork='cd /mnt/c/Users/{{ .chezmoi.username }}/OneDrive/Documentos/work/repos'
+{{- end }}
+
+{{- if or (eq .machine_type "personal") (eq .machine_type "hybrid") }}
+# Personal project aliases
+alias cdrepos='cd /mnt/c/Users/{{ .chezmoi.username }}/OneDrive/Documentos/repos'
+alias personal-explorer='explorer.exe /mnt/c/Users/{{ .chezmoi.username }}/OneDrive/Documentos/repos'
+{{- end }}
+{{- end }}
