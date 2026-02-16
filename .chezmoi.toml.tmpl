@@ -29,4 +29,4 @@ encryption = "age"
 
 [age]
     identity = "~/.config/chezmoi/key.txt"
-    recipient = "age1..." # Replace with your public key generated during bootstrap
+    recipient = {{ output "age-keygen" "-y" (joinPath .chezmoi.homeDir ".config/chezmoi/key.txt") | trim | quote }}
