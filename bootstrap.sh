@@ -15,7 +15,7 @@ fi
 
 # 1. Update and install basic dependencies
 sudo apt-get update
-sudo apt-get install -y curl git age gnupg software-properties-common
+sudo apt-get install -y curl git age gnupg software-properties-common snapd
 
 # 2. Install Ansible
 if ! command -v ansible &> /dev/null; then
@@ -36,7 +36,13 @@ if ! command -v chezmoi >/dev/null 2>&1 && [ ! -f /snap/bin/chezmoi ]; then
     sudo snap install chezmoi --classic
 fi
 
-# 5. Initialize age key if not present
+# 5. Bitwarden Login
+if ! bw status | grep -q "authenticated"; then
+    echo "Logging into Bitwarden..."
+    bw login
+fi
+
+# 6. Initialize age key if not present
 if [ ! -f "$HOME/.config/chezmoi/key.txt" ]; then
     echo "Generating age key..."
     mkdir -p "$HOME/.config/chezmoi"
