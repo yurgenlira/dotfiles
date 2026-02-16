@@ -36,22 +36,33 @@ if ! command -v chezmoi >/dev/null 2>&1 && [ ! -f /snap/bin/chezmoi ]; then
     sudo snap install chezmoi --classic
 fi
 
-# 5. Bitwarden Login
+# 5. Bitwarden Login & Unlock
 if bw status | grep -q '"status":"unauthenticated"'; then
     echo "Logging into Bitwarden..."
     bw login
-else
-    echo "Bitwarden is already logged in (Status: $(bw status | grep -oP '"status":"\K[^"]+')). Skipping login."
 fi
 
-# 6. Initialize age key if not present
-if [ ! -f "$HOME/.config/chezmoi/key.txt" ]; then
-    echo "Generating age key..."
-    mkdir -p "$HOME/.config/chezmoi"
-    age-keygen -o "$HOME/.config/chezmoi/key.txt"
-    echo "IMPORTANT: Save the following public key to your Bitwarden vault:"
-    age-keygen -y "$HOME/.config/chezmoi/key.txt"
+if bw status | grep -q '"status":"locked"'; then
+    echo "Unlocking Bitwarden..."
+    BW_SESSION=$(bw unlock --raw)
+    export BW_SESSION
 fi
+
+# 6. Retrieve or Initialize age key
+mkdir -p "$HOME/.config/chezmoi"
+if [ ! -f "$HOME/.config/chezmoi/key.txt" ]; then
+    echo "Checking for age key in Bitwarden..."
+    if bw get notes "chezmoi-age-key" > "$HOME/.config/chezmoi/key.txt" 2>/dev/null; then
+        echo "Successfully retrieved age key from Bitwarden."
+    else
+        echo "Could not find 'chezmoi-age-key' in Bitwarden."
+        echo "Generating a new one instead..."
+        age-keygen -o "$HOME/.config/chezmoi/key.txt"
+        echo "IMPORTANT: Save the following content as a Secure Note named 'chezmoi-age-key' in Bitwarden:"
+        cat "$HOME/.config/chezmoi/key.txt"
+    fi
+fi
+chmod 600 "$HOME/.config/chezmoi/key.txt"
 
 echo "Bootstrap complete. You can now run:"
 echo "chezmoi init --apply --branch test/vm-setup <your-github-username>"
