@@ -1,19 +1,32 @@
-{{- $email := "your-email@example.com" -}}
-{{- $agekey := true -}}
+{{- $name := promptStringOnce . "name" "Your Name" "Julio Lira" -}}
+{{- $machine_type := promptStringOnce . "machine_type" "Machine type (personal/work/hybrid)" "hybrid" -}}
+{{- $os := promptStringOnce . "os" "Operating System" "linux" -}}
+{{- $editor := promptStringOnce . "editor" "Default Editor" "code" -}}
+
+{{- $personal_email := "" -}}
+{{- if or (eq $machine_type "personal") (eq $machine_type "hybrid") -}}
+{{-   $personal_email = promptStringOnce . "personal_email" "Personal Email" "" -}}
+{{- end -}}
+
+{{- $work_email := "" -}}
+{{- if or (eq $machine_type "work") (eq $machine_type "hybrid") -}}
+{{-   $work_email = promptStringOnce . "work_email" "Work Email" "" -}}
+{{- end -}}
 
 [data]
-    email = {{ $email | quote }}
+    name = {{ $name | quote }}
+    machine_type = {{ $machine_type | quote }}
+    os = {{ $os | quote }}
+    editor = {{ $editor | quote }}
+    personal_email = {{ $personal_email | quote }}
+    work_email = {{ $work_email | quote }}
 
 [bitwarden]
     command = "bw"
+    unlock = "auto"
 
 encryption = "age"
 
 [age]
     identity = "~/.config/chezmoi/key.txt"
     recipient = "age1..." # Replace with your public key generated during bootstrap
-
-[git]
-    autoAdd = true
-    autoCommit = true
-    autoPush = true
