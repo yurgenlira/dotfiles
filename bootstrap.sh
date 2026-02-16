@@ -46,6 +46,7 @@ if bw status | grep -q '"status":"locked"'; then
     echo "Unlocking Bitwarden..."
     BW_SESSION=$(bw unlock --raw)
     export BW_SESSION
+    bw sync
 fi
 
 # 6. Retrieve or Initialize age key
@@ -62,6 +63,7 @@ if [ ! -f "$HOME/.config/chezmoi/key.txt" ]; then
         cat "$HOME/.config/chezmoi/key.txt"
     fi
 fi
+sudo chown -R "$(id -u):$(id -g)" "$HOME/.config/chezmoi"
 chmod 600 "$HOME/.config/chezmoi/key.txt"
 
 echo "Bootstrap complete. You can now run:"
