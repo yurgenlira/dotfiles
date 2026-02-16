@@ -37,9 +37,11 @@ if ! command -v chezmoi >/dev/null 2>&1 && [ ! -f /snap/bin/chezmoi ]; then
 fi
 
 # 5. Bitwarden Login
-if ! bw status | grep -q '"status":"authenticated"'; then
+if bw status | grep -q '"status":"unauthenticated"'; then
     echo "Logging into Bitwarden..."
     bw login
+else
+    echo "Bitwarden is already logged in (Status: $(bw status | grep -oP '"status":"\K[^"]+')). Skipping login."
 fi
 
 # 6. Initialize age key if not present
