@@ -1,4 +1,3 @@
----
 - name: Ensure basic packages are installed
   ansible.builtin.apt:
     name:
@@ -6,5 +5,14 @@
       - git
       - nano
       - htop
+      - gnome-browser-connector
+      - jq
     state: present
     update_cache: yes
+
+- name: Configure passwordless sudo for the user
+  ansible.builtin.copy:
+    content: "{{ ansible_user_id }} ALL=(ALL) NOPASSWD:ALL"
+    dest: "/etc/sudoers.d/{{ ansible_user_id }}"
+    mode: '0440'
+    validate: /usr/sbin/visudo -cf %s

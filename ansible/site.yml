@@ -5,5 +5,7 @@
   become: true
   roles:
     - role: common
+    - role: chrome
+    - role: antigravity
     - role: gnome
       become: false
