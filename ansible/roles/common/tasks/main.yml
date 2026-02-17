@@ -8,6 +8,7 @@
       - htop
       - gnome-browser-connector
       - jq
+      - python3-psutil
     state: present
     update_cache: yes
 
