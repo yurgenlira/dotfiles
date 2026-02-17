@@ -4,4 +4,6 @@
   connection: local
   become: true
   roles:
-    - common
+    - role: common
+    - role: gnome
+      become: false
