@@ -3,6 +3,31 @@
 Managed with [chezmoi](https://www.chezmoi.io/) + [Ansible](https://www.ansible.com/) + [Bitwarden CLI](https://bitwarden.com/help/cli/). 
 It is designed to be portable across standard Linux distributions and Windows Subsystem for Linux (WSL), with specialized support for hybrid work/personal environments.
 
+## What is Automated?
+
+### 🛠️ System Configuration (via Ansible)
+- **Base Packages**: `curl`, `git`, `htop`, `jq`, `python3-psutil`.
+- **System Hardening**: Configures passwordless `sudo` for the current user.
+- **Desktop Environment (GNOME)**:
+    - Dark mode preference.
+    - Custom clock (show date, hide seconds).
+    - Power management (disable sleep on AC).
+- **Software Installation**:
+    - [Google Chrome](https://www.google.com/chrome/)
+    - [Antigravity](https://antigravity.dev/) (Self-updating agent)
+    - [Bitwarden CLI](https://bitwarden.com/help/cli/)
+    - [chezmoi](https://www.chezmoi.io/)
+
+### 🔐 Secrets & Identity (via Bitwarden + age)
+- **SSH Keys**: Provisioned directly from Bitwarden Secure Notes into `~/.ssh/`.
+- **AWS Credentials**: Managed per-environment (Work/Personal) and pulled from Bitwarden.
+- **Encryption**: Files like `.ssh/config` are safely encrypted in the repo using `age`.
+- **Key Management**: `age` keys are automatically retrieved from or backed up to Bitwarden during bootstrap.
+
+### 🐚 Shell Environment (via chezmoi)
+- **Aliases & Functions**: Custom bash helpers and Bitwarden session management.
+- **Git Config**: Conditional identities for personal and work-related repositories.
+
 ## Bootstrap
 
 To set up a new machine, first ensure `curl` is installed:
