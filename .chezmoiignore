@@ -1,3 +1,4 @@
+# Add paths here that you want to keep in the repo but not install
 # Exclude repository metadata and scripts from the target home directory
 .git/
 .github/

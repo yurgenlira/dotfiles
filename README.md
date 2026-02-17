@@ -1,6 +1,7 @@
 # Dotfiles
 
-Managed with [chezmoi](https://www.chezmoi.io/) + [Ansible](https://www.ansible.com/) + [Bitwarden CLI](https://bitwarden.com/help/cli/).
+Managed with [chezmoi](https://www.chezmoi.io/) + [Ansible](https://www.ansible.com/) + [Bitwarden CLI](https://bitwarden.com/help/cli/). 
+It is designed to be portable across standard Linux distributions and Windows Subsystem for Linux (WSL), with specialized support for hybrid work/personal environments.
 
 ## Bootstrap
 
