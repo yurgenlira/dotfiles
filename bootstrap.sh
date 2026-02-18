@@ -25,15 +25,27 @@ if ! command -v ansible &> /dev/null; then
 fi
 
 # 3. Install Bitwarden CLI
-if ! command -v bw >/dev/null 2>&1 && [ ! -f /snap/bin/bw ]; then
-    echo "Installing Bitwarden CLI via snap..."
-    sudo snap install bw
+if ! command -v bw >/dev/null 2>&1; then
+    if command -v snap >/dev/null 2>&1 && snap version >/dev/null 2>&1; then
+        echo "Installing Bitwarden CLI via snap..."
+        sudo snap install bw
+    else
+        echo "Installing Bitwarden CLI via npm..."
+        sudo apt-get install -y nodejs npm
+        sudo npm install -g @bitwarden/cli
+    fi
 fi
 
 # 4. Install chezmoi
-if ! command -v chezmoi >/dev/null 2>&1 && [ ! -f /snap/bin/chezmoi ]; then
-    echo "Installing chezmoi via snap..."
-    sudo snap install chezmoi --classic
+if ! command -v chezmoi >/dev/null 2>&1; then
+    if command -v snap >/dev/null 2>&1 && snap version >/dev/null 2>&1; then
+        echo "Installing chezmoi via snap..."
+        sudo snap install chezmoi --classic
+    else
+        echo "Installing chezmoi via install script..."
+        sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
+        export PATH="$HOME/.local/bin:$PATH"
+    fi
 fi
 
 # 5. Bitwarden Login & Unlock

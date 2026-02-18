@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main, test/vm-setup ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -54,6 +54,10 @@ jobs:
         run: |
           apt-get update
           apt-get install -y curl git sudo age python3 ansible jq
+
+      - name: Install chezmoi (snap does work in a container)
+        run: |
+          sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
 
       - name: Create test user
         run: |
