@@ -98,6 +98,19 @@ jobs:
           EOF
           chown -R testuser:testuser /home/testuser/.config
 
+      - name: Install Ansible collections
+        run: ansible-galaxy collection install -r ansible/requirements.yml
+
+      - name: Run Ansible common role
+        run: |
+          ansible-playbook ansible/site.yml \
+            --tags common \
+            -i localhost, \
+            -c local \
+            --skip-tags chrome,antigravity,gnome \
+            -e "ansible_python_interpreter=/usr/bin/python3" \
+            2>&1 || true
+
       - name: Apply dotfiles
         run: |
           su testuser -c "chezmoi --source /home/testuser/dotfiles apply --force 2>&1 || true"
