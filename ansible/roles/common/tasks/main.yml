@@ -10,7 +10,7 @@
       - jq
       - python3-psutil
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Configure passwordless sudo for the user
   ansible.builtin.copy:

@@ -18,7 +18,10 @@
 
 - name: Add Antigravity repository
   ansible.builtin.apt_repository:
-    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/antigravity-repo-key.gpg] https://us-central1-apt.pkg.dev/projects/antigravity-auto-updater-dev/ antigravity-debian main"
+    repo: >-
+      deb [arch=amd64 signed-by=/etc/apt/keyrings/antigravity-repo-key.gpg]
+      https://us-central1-apt.pkg.dev/projects/antigravity-auto-updater-dev/
+      antigravity-debian main
     filename: antigravity
     state: present
 
@@ -26,4 +29,4 @@
   ansible.builtin.apt:
     name: antigravity
     state: present
-    update_cache: yes
+    update_cache: true
