@@ -17,6 +17,12 @@ jobs:
           python3 -m pip install --upgrade pip
           python3 -m pip install ansible-core ansible-lint
 
+      - name: Install ansible collections
+        run: |
+          if [ -f ansible/requirements.yml ]; then
+            ansible-galaxy install -r ansible/requirements.yml
+          fi
+
       - name: Run ansible-lint
         run: ansible-lint ansible/site.yml
 
