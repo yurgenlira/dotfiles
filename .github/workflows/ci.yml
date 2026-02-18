@@ -53,32 +53,25 @@ jobs:
       - name: Install base dependencies
         run: |
           apt-get update
-          apt-get install -y curl git sudo age python3 ansible snapd
+          apt-get install -y curl git sudo age python3 ansible jq
 
       - name: Create test user
         run: |
           useradd -m -s /bin/bash testuser
           echo "testuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-      - name: Mock Bitwarden CLI
+      - name: Install mock Bitwarden CLI
         run: |
-          cat > /usr/local/bin/bw << 'EOF'
-          #!/bin/bash
-          case "$1" in
-            status)  echo '{"status":"locked"}' ;;
-            unlock)  echo "mock-session-token" ;;
-            sync)    echo "Syncing..." ;;
-            get)     exit 1 ;;  # Simulate no key found in vault
-            *)       exit 0 ;;
-          esac
-          EOF
-          chmod +x /usr/local/bin/bw
+          install -m 755 tests/mocks/bw /usr/local/bin/bw
+          # Point mock to fixture file
+          echo "export BW_FIXTURE=$GITHUB_WORKSPACE/tests/fixtures/bw-data.json" >> /etc/environment
 
       - name: Run bootstrap script
         run: |
           cp -r . /home/testuser/dotfiles
           chown -R testuser:testuser /home/testuser/dotfiles
-          su testuser -c "cd /home/testuser/dotfiles && ./bootstrap.sh"
+          su testuser -c "BW_FIXTURE=$GITHUB_WORKSPACE/tests/fixtures/bw-data.json \
+            bash /home/testuser/dotfiles/bootstrap.sh"
 
       - name: Seed chezmoi config (simulate init answers)
         run: |
@@ -105,69 +98,6 @@ jobs:
         run: |
           su testuser -c "chezmoi --source /home/testuser/dotfiles apply --force 2>&1 || true"
 
-      - name: ✅ Test - Dotfiles exist
+      - name: Run integration tests
         run: |
-          echo "=== Checking dotfiles were created ==="
-          PASS=0
-          FAIL=0
-
-          check_file() {
-            if [ -f "$1" ]; then
-              echo "  ✅ $1"
-              PASS=$((PASS + 1))
-            else
-              echo "  ❌ $1 (MISSING)"
-              FAIL=$((FAIL + 1))
-            fi
-          }
-
-          check_file /home/testuser/.bash_aliases
-          check_file /home/testuser/.bash_functions
-          check_file /home/testuser/.gitconfig
-          check_file /home/testuser/.profile
-
-          echo ""
-          echo "Results: $PASS passed, $FAIL failed"
-          [ "$FAIL" -eq 0 ] || exit 1
-
-      - name: ✅ Test - Ansible common packages installed
-        run: |
-          echo "=== Checking packages installed by Ansible ==="
-          PASS=0
-          FAIL=0
-
-          check_pkg() {
-            if dpkg -l "$1" 2>/dev/null | grep -q "^ii"; then
-              echo "  ✅ $1"
-              PASS=$((PASS + 1))
-            else
-              echo "  ❌ $1 (NOT INSTALLED)"
-              FAIL=$((FAIL + 1))
-            fi
-          }
-
-          check_pkg curl
-          check_pkg git
-          check_pkg htop
-          check_pkg jq
-
-          echo ""
-          echo "Results: $PASS passed, $FAIL failed"
-          [ "$FAIL" -eq 0 ] || exit 1
-
-      - name: ✅ Test - age key was generated
-        run: |
-          echo "=== Checking age key ==="
-          if [ -f /home/testuser/.config/chezmoi/key.txt ]; then
-            echo "  ✅ age key exists"
-            PERMS=$(stat -c "%a" /home/testuser/.config/chezmoi/key.txt)
-            if [ "$PERMS" = "600" ]; then
-              echo "  ✅ age key permissions are 600"
-            else
-              echo "  ❌ age key permissions are $PERMS (expected 600)"
-              exit 1
-            fi
-          else
-            echo "  ❌ age key NOT found"
-            exit 1
-          fi
+          TEST_HOME=/home/testuser bash tests/run-all.sh

@@ -1,0 +1,33 @@
+#!/bin/bash
+# Mock Bitwarden CLI for testing
+# Reads from tests/fixtures/bw-data.json
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FIXTURE="${BW_FIXTURE:-$SCRIPT_DIR/../fixtures/bw-data.json}"
+
+case "$1" in
+  status)
+    echo '{"status":"unlocked"}'
+    ;;
+  unlock)
+    echo "mock-session-token"
+    ;;
+  sync)
+    echo "Syncing..."
+    ;;
+  get)
+    if [ "$2" = "notes" ]; then
+      NAME="$3"
+      jq -r --arg name "$NAME" '.items[] | select(.name == $name) | .notes // empty' "$FIXTURE"
+    elif [ "$2" = "item" ]; then
+      NAME="$3"
+      jq -r --arg name "$NAME" '.items[] | select(.name == $name)' "$FIXTURE"
+    fi
+    ;;
+  list)
+    jq '.items' "$FIXTURE"
+    ;;
+  *)
+    exit 0
+    ;;
+esac

@@ -1,0 +1,43 @@
+{
+    "items": [
+        {
+            "id": "aaa-111-bbb-222",
+            "name": "yurgenlira",
+            "type": 2,
+            "notes": "-----BEGIN OPENSSH PRIVATE KEY-----\nfakekey1234567890\n-----END OPENSSH PRIVATE KEY-----",
+            "fields": [
+                {
+                    "name": "public_key",
+                    "value": "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFakePublicKeyForTesting testuser@ci"
+                }
+            ]
+        },
+        {
+            "id": "ccc-333-ddd-444",
+            "name": "chezmoi-age-key",
+            "type": 2,
+            "notes": "# created: 2024-01-01T00:00:00Z\n# public key: age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p\nAGE-SECRET-KEY-1FAKEKEY1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+            "fields": []
+        },
+        {
+            "id": "eee-555-fff-666",
+            "name": "AWS test@example.com",
+            "type": 2,
+            "notes": "",
+            "fields": [
+                {
+                    "name": "Access key",
+                    "value": "AKIAFAKEACCESSKEYID"
+                },
+                {
+                    "name": "Secret access key",
+                    "value": "fakeSecretAccessKey1234567890abcdefghijk"
+                },
+                {
+                    "name": "Region",
+                    "value": "us-east-1"
+                }
+            ]
+        }
+    ]
+}
