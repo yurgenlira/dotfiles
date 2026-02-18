@@ -13,6 +13,8 @@
 {{-   $work_email = promptStringOnce . "work_email" "Work Email" "" -}}
 {{- end -}}
 
+{{- $recipient := promptStringOnce . "recipient" "Age Public Key (age1...)" -}}
+
 encryption = "age"
 
 [data]
@@ -44,4 +46,4 @@ encryption = "age"
 
 [age]
     identity = "~/.config/chezmoi/key.txt"
-    recipient = {{ output "age-keygen" "-y" (joinPath .chezmoi.homeDir ".config/chezmoi/key.txt") | trim | quote }}
+    recipient = {{ $recipient | quote }}
