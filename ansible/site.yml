@@ -1,6 +1,6 @@
 ---
 - name: Configure System
-  hosts: localhost
+  hosts: local
   connection: local
   become: true
   roles:

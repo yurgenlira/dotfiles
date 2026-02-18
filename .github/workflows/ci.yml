@@ -103,11 +103,9 @@ jobs:
 
       - name: Run Ansible common role
         run: |
-          ansible-playbook ansible/site.yml \
+          cd ansible
+          ansible-playbook site.yml \
             --tags common \
-            -i localhost, \
-            -c local \
-            --skip-tags chrome,antigravity,gnome \
             -e "ansible_python_interpreter=/usr/bin/python3" \
             2>&1 || true
 
