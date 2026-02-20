@@ -1,0 +1,7 @@
+{{- if or (eq .machine_type "work") (eq .machine_type "hybrid") -}}
+[profile nowtech]
+region = {{ (bitwardenFields "item" (print "AWS " .work_email)).Region }}
+output = json
+{{ "\n" }}
+{{- end -}}
+

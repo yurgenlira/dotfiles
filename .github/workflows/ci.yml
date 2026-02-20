@@ -7,20 +7,27 @@ on:
     branches: [ main ]
 
 jobs:
-  lint:
+  # ─── Job 1: Lint Ansible Playbooks ──────────────────────────────────────────
+  ansible-lint:
+    name: Lint Ansible
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ansible-lint
+          python3 -m pip install --upgrade pip
+          python3 -m pip install ansible-core ansible-lint
+
+      - name: Install Ansible collections
+        run: ansible-galaxy collection install -r ansible/requirements.yml
 
       - name: Run ansible-lint
         run: ansible-lint ansible/site.yml
 
-  validate:
+  # ─── Job 2: Validate chezmoi Templates ──────────────────────────────────────
+  chezmoi-validate:
+    name: Validate chezmoi Templates
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,5 +35,84 @@ jobs:
       - name: Install chezmoi
         run: sh -c "$(curl -fsLS get.chezmoi.io)"
 
-      - name: Validate chezmoi templates
-        run: ./bin/chezmoi execute-template < dot_chezmoi.toml.tmpl
+      - name: Validate chezmoi config template (dry-run)
+        run: ./bin/chezmoi init --dry-run
+
+  # ─── Job 3: Integration Test ─────────────────────────────────────────────────
+  integration-test:
+    name: Integration Test
+    needs: [ansible-lint, chezmoi-validate]
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:24.04
+      options: --privileged
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install base dependencies
+        run: |
+          apt-get update
+          apt-get install -y curl git sudo age python3 ansible jq
+
+      - name: Install chezmoi (snap does work in a container)
+        run: |
+          sh -c "$(curl -fsLS get.chezmoi.io)" -- -b /usr/local/bin
+
+      - name: Create test user
+        run: |
+          useradd -m -s /bin/bash testuser
+          echo "testuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+      - name: Install mock Bitwarden CLI
+        run: |
+          install -m 755 tests/mocks/bw /usr/local/bin/bw
+          # Point mock to fixture file
+          echo "export BW_FIXTURE=$GITHUB_WORKSPACE/tests/fixtures/bw-data.json" >> /etc/environment
+
+      - name: Run bootstrap script
+        run: |
+          cp -r . /home/testuser/dotfiles
+          chown -R testuser:testuser /home/testuser/dotfiles
+          su testuser -c "BW_FIXTURE=$GITHUB_WORKSPACE/tests/fixtures/bw-data.json \
+            bash /home/testuser/dotfiles/bootstrap.sh"
+
+      - name: Seed chezmoi config (simulate init answers)
+        run: |
+          mkdir -p /home/testuser/.config/chezmoi
+          cat > /home/testuser/.config/chezmoi/chezmoi.toml << 'EOF'
+          encryption = "age"
+
+          [data]
+              name = "Test User"
+              machine_type = "personal"
+              os = "linux"
+              editor = "nano"
+              personal_email = "test@example.com"
+              work_email = ""
+              recipient = "age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p"
+
+          [age]
+              identity = "/home/testuser/.config/chezmoi/key.txt"
+              recipient = "age1ql3z7hjy54pw3hyww5ayyfg7zqgvc7w3j2elw8zmrj2kg5sfn9aqmcac8p"
+          EOF
+          chown -R testuser:testuser /home/testuser/.config
+
+      - name: Install Ansible collections
+        run: ansible-galaxy collection install -r ansible/requirements.yml
+
+      - name: Run Ansible common role
+        run: |
+          cd ansible
+          ansible-playbook site.yml \
+            --tags common \
+            -e "ansible_python_interpreter=/usr/bin/python3" \
+            2>&1 || true
+
+      - name: Apply dotfiles
+        run: |
+          su testuser -c "chezmoi --source /home/testuser/dotfiles apply --force 2>&1 || true"
+
+      - name: Run integration tests
+        run: |
+          TEST_HOME=/home/testuser bash tests/run-all.sh

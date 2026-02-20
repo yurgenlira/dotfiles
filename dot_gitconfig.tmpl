@@ -1,0 +1,53 @@
+{{- if or (eq .machine_type "personal") (eq .machine_type "hybrid") }}
+# Default configuration (personal)
+[user]
+    name = {{ .name }}
+    email = {{ .personal_email }}
+[init]
+    defaultBranch = main
+{{- end }}
+
+{{- if eq .machine_type "work" }}
+# Work configuration
+[user]
+    name = {{ .name }}
+    email = {{ .work_email }}
+[init]
+    defaultBranch = master
+{{- end }}
+
+{{- if eq .machine_type "hybrid" }}
+# Override config for work repositories
+{{- if eq .chezmoi.os "windows" }}
+[includeIf "gitdir:~/OneDrive/Documents/work/"]
+{{- else }}
+[includeIf "gitdir:~/Documents/work/"]
+{{- end }}
+   path = .gitconfig-work
+{{- end }}
+
+# Common settings
+[color]
+    ui = true
+
+{{- if eq .chezmoi.os "windows" }}
+[core]
+    autocrlf = true
+{{- else }}
+[core]
+    autocrlf = false
+{{- end }}
+
+[alias]
+    cm = commit -am
+    co = checkout
+    cb = checkout -b
+    ph = push origin HEAD
+    pl = pull origin
+    rename = branch -m
+    remove = branch -D
+    reseth = reset --hard HEAD^
+    b = branch
+    s = status
+    d = diff
+    l = log --oneline

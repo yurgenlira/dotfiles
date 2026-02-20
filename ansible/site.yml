@@ -1,7 +1,15 @@
 ---
 - name: Configure System
-  hosts: localhost
+  hosts: local
   connection: local
   become: true
   roles:
-    - common
+    - role: common
+      tags: [common]
+    - role: chrome
+      tags: [chrome]
+    - role: antigravity
+      tags: [antigravity]
+    - role: gnome
+      become: false
+      tags: [gnome]

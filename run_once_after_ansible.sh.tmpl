@@ -3,4 +3,5 @@
 # run_once_after_ansible.sh.tmpl - Run Ansible playbooks
 
 echo "Running Ansible playbooks..."
-ansible-playbook -i localhost, -c local {{ .chezmoi.sourceDir }}/ansible/site.yml --ask-become-pass
+cd {{ .chezmoi.sourceDir }}/ansible
+ansible-playbook site.yml --ask-become-pass
