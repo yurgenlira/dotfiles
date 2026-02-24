@@ -79,4 +79,4 @@ sudo chown -R "$(id -u):$(id -g)" "$HOME/.config/chezmoi"
 chmod 600 "$HOME/.config/chezmoi/key.txt"
 
 echo "Bootstrap complete. You can now run:"
-echo "chezmoi init --apply --branch test/vm-setup <your-github-username>"
+echo "chezmoi init --apply <your-github-username>"
