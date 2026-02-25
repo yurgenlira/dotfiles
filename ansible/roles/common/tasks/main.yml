@@ -1,20 +1,41 @@
 ---
-- name: Ensure basic packages are installed
-  ansible.builtin.apt:
-    name:
-      - curl
-      - git
-      - nano
-      - htop
-      - gnome-browser-connector
-      - jq
-      - python3-psutil
+- name: Ensure keyrings directory exists
+  ansible.builtin.file:
+    path: "{{ item.keyring | dirname }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ external_repositories }}"
+  when: external_repositories is defined and item.keyring is defined
+
+- name: Download and de-armor repository keys
+  ansible.builtin.shell: |
+    set -o pipefail
+    curl -fsSL {{ item.key_url }} | gpg --dearmor --yes -o {{ item.keyring }}
+  args:
+    creates: "{{ item.keyring }}"
+    executable: /bin/bash
+  loop: "{{ external_repositories }}"
+  when: external_repositories is defined and item.keyring is defined
+
+- name: Add external software repositories
+  ansible.builtin.apt_repository:
+    filename: "{{ item.name }}"
+    repo: "{{ item.repo }}"
     state: present
     update_cache: true
+  loop: "{{ external_repositories }}"
+  when: external_repositories is defined
+
+- name: Ensure all workstation packages are installed
+  ansible.builtin.apt:
+    name: "{{ workstation_packages }}"
+    state: present
+    update_cache: true
+  when: workstation_packages is defined
 
 - name: Configure passwordless sudo for the user
   ansible.builtin.copy:
     content: "{{ ansible_facts['user_id'] }} ALL=(ALL) NOPASSWD:ALL"
     dest: "/etc/sudoers.d/{{ ansible_facts['user_id'] }}"
-    mode: '0440'
+    mode: "0440"
     validate: /usr/sbin/visudo -cf %s

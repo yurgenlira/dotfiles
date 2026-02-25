@@ -20,3 +20,6 @@ Thumbs.db
 
 # Chezmoi (optional, if you have local-only files)
 .chezmoi.yaml.tmpl
+
+# Virtual Environment
+.venv/

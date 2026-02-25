@@ -33,28 +33,24 @@ The bootstrap script will:
 ## 🤖 What is Automated?
 
 ### 🛠️ System Configuration (via Ansible)
-- **Base Packages**: `curl`, `git`, `htop`, `jq`, `python3-psutil`
-- **System Hardening**: Configures passwordless `sudo` for the current user
+- **Data-Driven Installation**: Software is managed via `ansible/group_vars/all.yml` for easy scaling.
+- **Base & Workstation Packages**: `antigravity`, `curl`, `git`, google-chrome`, `htop`, `jq`, `terraform`, and more.
+- **System Hardening**: Configures passwordless `sudo` for the current user.
 - **Desktop Environment (GNOME)**:
-  - Dark mode preference
-  - Custom clock (show date, hide seconds)
-  - Power management (disable sleep on AC)
-- **Software Installation**:
-  - [Google Chrome](https://www.google.com/chrome/)
-  - [Antigravity](https://antigravity.dev/) (self-updating agent)
-  - [Bitwarden CLI](https://bitwarden.com/help/cli/)
-  - [chezmoi](https://www.chezmoi.io/)
+  - Dark mode preference.
+  - Custom clock (show date, hide seconds).
+  - Power management (disable sleep on AC).
 
 ### 🔐 Secrets & Identity (via Bitwarden + age)
-- **SSH Keys**: Provisioned from Bitwarden Secure Notes into `~/.ssh/`
-- **AWS Credentials**: Fetched per-environment from Bitwarden using your work email
-- **Encryption**: Sensitive files (e.g. `~/.ssh/config`) are encrypted with `age` in the repo
-- **Key Management**: `age` key is retrieved from Bitwarden on init, or generated and backed up automatically
+- **SSH Keys**: Provisioned from Bitwarden Secure Notes into `~/.ssh/`.
+- **AWS Credentials**: Fetched per-environment from Bitwarden using your work email.
+- **Encryption**: Sensitive files (e.g. `~/.ssh/config`) are encrypted with `age` in the repo.
+- **Key Management**: `age` key is retrieved from Bitwarden on init, or generated and backed up automatically.
 
 ### 🐚 Shell Environment (via chezmoi)
-- **Aliases & Functions**: Custom bash helpers and Bitwarden session management
-- **Git Config**: Conditional identities for personal and work repositories
-- **Editor Integration**: `chezmoi edit`, `diff`, and `merge` configured for VS Code
+- **Aliases & Functions**: Custom bash helpers and Bitwarden session management.
+- **Git Config**: Conditional identities for personal and work repositories.
+- **Editor Integration**: `chezmoi edit`, `diff`, and `merge` configured for VS Code.
 
 ---
 
@@ -63,12 +59,12 @@ The bootstrap script will:
 ```
 dotfiles/
 ├── ansible/
+│   ├── group_vars/
+│   │   └── all.yml       # Centralized package and repo lists (Scalable!)
 │   ├── roles/
-│   │   ├── common/       # Base packages and sudo config
-│   │   ├── chrome/       # Google Chrome installation
-│   │   ├── antigravity/  # Antigravity agent installation
+│   │   ├── common/       # Generic installer (Engine)
 │   │   └── gnome/        # GNOME desktop settings
-│   ├── site.yml
+│   ├── site.yml          # Main playbook
 │   ├── ansible.cfg
 │   └── requirements.yml
 ├── tests/
@@ -100,10 +96,10 @@ dotfiles/
 
 ---
 
-## 🧪 Testing
+## 🧪 Testing & Development
 
-Run the integration tests locally at any time:
-
+### Local Tests
+Run the integration tests locally:
 ```bash
 bash tests/run-all.sh
 ```
@@ -112,5 +108,17 @@ Tests verify:
 - ✅ Dotfiles are applied (`~/.bash_aliases`, `~/.gitconfig`, etc.)
 - ✅ Required packages are installed
 - ✅ `age` key exists with correct `600` permissions
+
+### Ansible Linting
+For local Ansible development, we use `ansible-dev-tools`.
+```bash
+# Setup 
+python3 -m venv .venv
+source .venv/bin/activate
+pip install ansible-dev-tools
+
+# Run linting
+ansible-lint ansible/site.yml
+```
 
 CI runs automatically on every push and pull request via GitHub Actions.

@@ -1,0 +1,27 @@
+# Software Repositories
+external_repositories:
+  - name: antigravity
+    key_url: https://us-central1-apt.pkg.dev/doc/repo-signing-key.gpg
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/antigravity-repo-key.gpg] https://us-central1-apt.pkg.dev/projects/antigravity-auto-updater-dev/ antigravity-debian main"
+    keyring: /etc/apt/keyrings/antigravity-repo-key.gpg
+  - name: google-chrome
+    key_url: https://dl.google.com/linux/linux_signing_key.pub
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main"
+    keyring: /usr/share/keyrings/google-chrome.gpg
+  - name: hashicorp
+    key_url: https://apt.releases.hashicorp.com/gpg
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_facts['distribution_release'] }} main"
+    keyring: /usr/share/keyrings/hashicorp-archive-keyring.gpg
+
+# Main Package List
+workstation_packages:
+  - antigravity
+  - curl
+  - git
+  - gnome-browser-connector
+  - google-chrome-stable
+  - htop
+  - jq
+  - nano
+  - python3-psutil
+  - terraform
