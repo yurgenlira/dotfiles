@@ -32,6 +32,9 @@ check_pkg git
 check_pkg htop
 check_pkg jq
 check_pkg age
+check_pkg terraform
+check_pkg google-chrome-stable
+check_pkg antigravity
 
 echo ""
 echo "=== Testing commands are available ==="
@@ -39,6 +42,9 @@ check_cmd git
 check_cmd curl
 check_cmd jq
 check_cmd age-keygen
+check_cmd terraform
+check_cmd bw
+check_cmd antigravity
 
 echo ""
 echo "Results: $PASS passed, $FAIL failed"

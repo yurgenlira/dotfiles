@@ -26,10 +26,6 @@ run_test() {
   fi
 }
 
-echo "╔══════════════════════════════════════════╗"
-echo "║        Dotfiles Integration Tests        ║"
-echo "╚══════════════════════════════════════════╝"
-
 run_test "Packages"  "$SCRIPT_DIR/test-packages.sh"
 run_test "Dotfiles"  "$SCRIPT_DIR/test-dotfiles.sh"
 run_test "Age Key"   "$SCRIPT_DIR/test-age-key.sh"
