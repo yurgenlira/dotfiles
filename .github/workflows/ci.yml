@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   # ─── Job 1: Lint Ansible Playbooks ──────────────────────────────────────────
@@ -101,11 +101,12 @@ jobs:
       - name: Install Ansible collections
         run: ansible-galaxy collection install -r ansible/requirements.yml
 
-      - name: Run Ansible common role
+      - name: Run Ansible (excluding GUI tasks)
         run: |
           cd ansible
           ansible-playbook site.yml \
             --tags common \
+            --skip-tags gnome \
             -e "ansible_python_interpreter=/usr/bin/python3" \
             2>&1 || true
 
