@@ -16,6 +16,16 @@ check_pkg() {
   fi
 }
 
+check_snap() {
+  if snap list "$1" >/dev/null 2>&1; then
+    echo "  ✅ $1 (snap)"
+    PASS=$((PASS + 1))
+  else
+    echo "  ❌ $1 (snap NOT found)"
+    FAIL=$((FAIL + 1))
+  fi
+}
+
 check_cmd() {
   if command -v "$1" >/dev/null 2>&1; then
     echo "  ✅ $1 (command found)"
@@ -27,25 +37,40 @@ check_cmd() {
 }
 
 echo "=== Testing packages are installed ==="
+check_pkg age
+check_pkg antigravity
 check_pkg curl
 check_pkg git
+check_pkg gnome-browser-connector
+check_pkg google-chrome-stable
 check_pkg htop
 check_pkg jq
-check_pkg age
+check_pkg nano
+check_pkg plocate
+check_pkg python3-psutil
 check_pkg terraform
-check_pkg google-chrome-stable
-check_pkg antigravity
+
+echo ""
+echo "=== Testing snap packages are installed ==="
+check_snap aws-cli
 
 echo ""
 echo "=== Testing commands are available ==="
-check_cmd git
-check_cmd curl
-check_cmd jq
 check_cmd age-keygen
-check_cmd terraform
-check_cmd bw
 check_cmd antigravity
+check_cmd aws
+check_cmd bw
+check_cmd curl
+check_cmd git
+check_cmd htop
+check_cmd jq
+check_cmd locate
+check_cmd nano
+check_cmd terraform
 
 echo ""
 echo "Results: $PASS passed, $FAIL failed"
 [ "$FAIL" -eq 0 ] || exit 1
+
+
+ 
