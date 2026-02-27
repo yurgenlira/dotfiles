@@ -104,8 +104,7 @@ jobs:
       - name: Run Ansible (excluding GUI tasks)
         run: |
           cd ansible
-          ansible-playbook site.yml \
-            --tags common \
+          ansible-playbook site.yml \S
             --skip-tags gnome \
             -e "ansible_python_interpreter=/usr/bin/python3" \
             2>&1 || true
