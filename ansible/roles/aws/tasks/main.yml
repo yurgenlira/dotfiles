@@ -4,3 +4,4 @@
     name: aws-cli
     classic: true
     state: present
+  tags: [aws]

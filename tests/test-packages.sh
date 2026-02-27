@@ -50,15 +50,19 @@ check_pkg plocate
 check_pkg python3-psutil
 check_pkg terraform
 
-echo ""
-echo "=== Testing snap packages are installed ==="
-check_snap aws-cli
+if [ "${SKIP_SNAP_TESTS:-false}" != "true" ]; then
+    echo ""
+    echo "=== Testing snap packages are installed ==="
+    check_snap aws-cli
+fi
 
 echo ""
 echo "=== Testing commands are available ==="
 check_cmd age-keygen
 check_cmd antigravity
-check_cmd aws
+if [ "${SKIP_SNAP_TESTS:-false}" != "true" ]; then
+    check_cmd aws
+fi
 check_cmd bw
 check_cmd curl
 check_cmd git

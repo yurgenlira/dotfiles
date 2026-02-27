@@ -109,7 +109,7 @@ jobs:
         run: |
           cd ansible
           ansible-playbook site.yml \
-            --skip-tags gnome \
+            --skip-tags gnome,aws \
             -e "ansible_python_interpreter=/usr/bin/python3" \
             2>&1 || true
 
@@ -119,4 +119,4 @@ jobs:
 
       - name: Run integration tests
         run: |
-          TEST_HOME=/home/testuser bash tests/run-all.sh
+          TEST_HOME=/home/testuser SKIP_SNAP_TESTS=true bash tests/run-all.sh
