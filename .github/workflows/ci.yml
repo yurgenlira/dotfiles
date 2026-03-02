@@ -119,4 +119,4 @@ jobs:
 
       - name: Run integration tests
         run: |
-          TEST_HOME=/home/testuser SKIP_SNAP_TESTS=true bash tests/run-all.sh
+          TEST_HOME=/home/testuser SKIP_GUI_TESTS=true bash tests/run-all.sh

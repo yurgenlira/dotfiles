@@ -1,0 +1,24 @@
+---
+- name: Set GNOME Color Scheme to Dark Mode
+  community.general.dconf:
+    key: "/org/gnome/desktop/interface/color-scheme"
+    value: "'prefer-dark'"
+    state: present
+
+- name: Configure GNOME Clock (show date)
+  community.general.dconf:
+    key: "/org/gnome/desktop/interface/clock-show-date"
+    value: "true"
+    state: present
+
+- name: Configure GNOME Clock (hide seconds)
+  community.general.dconf:
+    key: "/org/gnome/desktop/interface/clock-show-seconds"
+    value: "false"
+    state: present
+
+- name: Configure GNOME Power Settings (disable sleep on AC)
+  community.general.dconf:
+    key: "/org/gnome/settings-daemon/plugins/power/sleep-inactive-ac-type"
+    value: "'nothing'"
+    state: present

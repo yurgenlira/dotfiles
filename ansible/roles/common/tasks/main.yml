@@ -33,6 +33,15 @@
     update_cache: true
   when: workstation_packages is defined
 
+- name: Ensure all workstation snap packages are installed
+  community.general.snap:
+    name: "{{ item.name }}"
+    classic: "{{ item.classic | default(false) }}"
+    state: present
+  loop: "{{ snap_packages }}"
+  when: snap_packages is defined
+  tags: [snap, aws]
+
 - name: Configure passwordless sudo for the user
   ansible.builtin.copy:
     content: "{{ ansible_facts['user_id'] }} ALL=(ALL) NOPASSWD:ALL"

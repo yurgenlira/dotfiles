@@ -50,7 +50,7 @@ check_pkg plocate
 check_pkg python3-psutil
 check_pkg terraform
 
-if [ "${SKIP_SNAP_TESTS:-false}" != "true" ]; then
+if [ "${SKIP_GUI_TESTS:-false}" != "true" ]; then
     echo ""
     echo "=== Testing snap packages are installed ==="
     check_snap aws-cli

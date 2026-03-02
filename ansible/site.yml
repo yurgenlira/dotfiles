@@ -7,7 +7,4 @@
     - role: common
       tags: [common]
     - role: gnome
-      become: false
       tags: [gnome]
-    - role: aws
-      tags: [aws]
