@@ -7,5 +7,4 @@
     - role: common
       tags: [common]
     - role: gnome
-      become: false
       tags: [gnome]

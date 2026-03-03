@@ -12,10 +12,15 @@ external_repositories:
     key_url: https://apt.releases.hashicorp.com/gpg
     repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_facts['distribution_release'] }} main"
     keyring: /usr/share/keyrings/hashicorp-archive-keyring.gpg
+  - name: vscode
+    key_url: https://packages.microsoft.com/keys/microsoft.asc
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/code stable main"
+    keyring: /usr/share/keyrings/microsoft.gpg
 
 # Main Package List
 workstation_packages:
   - antigravity
+  - code
   - curl
   - git
   - gnome-browser-connector
@@ -23,5 +28,12 @@ workstation_packages:
   - htop
   - jq
   - nano
+  - plocate
   - python3-psutil
   - terraform
+  - unzip
+
+# Snap Package List
+snap_packages:
+  - name: aws-cli
+    classic: true
