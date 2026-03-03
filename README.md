@@ -34,7 +34,7 @@ The bootstrap script will:
 
 ### 🛠️ System Configuration (via Ansible)
 - **Data-Driven Installation**: Software is managed via `ansible/group_vars/all.yml` for easy scaling.
-- **Base & Workstation Packages**: `antigravity`, `curl`, `git`, google-chrome`, `htop`, `jq`, `terraform`, and more.
+- **Base & Workstation Packages**: `antigravity`, `curl`, `git`, `google-chrome-stable`, `htop`, `jq`, `terraform`, and `code` (VS Code).
 - **System Hardening**: Configures passwordless `sudo` for the current user.
 - **Desktop Environment (GNOME)**:
   - Dark mode preference.
@@ -58,6 +58,7 @@ The bootstrap script will:
 
 ```
 dotfiles/
+├── .github/              # CI/CD workflows
 ├── ansible/
 │   ├── group_vars/
 │   │   └── all.yml       # Centralized package and repo lists (Scalable!)
@@ -79,7 +80,9 @@ dotfiles/
 ├── private_dot_ssh/      # SSH config and keys (age-encrypted)
 ├── dot_aws/              # AWS config and credentials (Bitwarden-sourced)
 ├── .chezmoi.toml.tmpl    # chezmoi config with prompts and encryption
+├── AGENTS.md             # AI Agent guidelines (Read this first!)
 ├── bootstrap.sh          # One-shot setup script
+├── TODO.md               # Project roadmap
 └── run_once_after_ansible.sh.tmpl
 ```
 
@@ -122,3 +125,10 @@ ansible-lint ansible/site.yml
 ```
 
 CI runs automatically on every push and pull request via GitHub Actions.
+
+---
+
+## 🤖 AI Agent Guidelines
+
+If you are an AI assistant helping with this project, please read [AGENTS.md](./AGENTS.md) before making changes. This project follows a **data-driven Ansible architecture** to ensure scalability and ease of maintenance.
+

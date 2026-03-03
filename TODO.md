@@ -16,5 +16,3 @@
   - [ ] Verify no remaining warnings during execution
 - [ ] **Antigravity**
   - [ ] Configure custom settings (login)
-- [ ] **Github actions**
-  - [ ] Improve concurrency, etc

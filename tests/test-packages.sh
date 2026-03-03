@@ -39,6 +39,7 @@ check_cmd() {
 echo "=== Testing packages are installed ==="
 check_pkg age
 check_pkg antigravity
+check_pkg code
 check_pkg curl
 check_pkg git
 check_pkg gnome-browser-connector
@@ -49,6 +50,7 @@ check_pkg nano
 check_pkg plocate
 check_pkg python3-psutil
 check_pkg terraform
+check_pkg unzip
 
 if [ "${SKIP_GUI_TESTS:-false}" != "true" ]; then
     echo ""
@@ -64,6 +66,7 @@ if [ "${SKIP_GUI_TESTS:-false}" != "true" ]; then
     check_cmd aws
 fi
 check_cmd bw
+check_cmd code
 check_cmd curl
 check_cmd git
 check_cmd htop
@@ -71,6 +74,7 @@ check_cmd jq
 check_cmd locate
 check_cmd nano
 check_cmd terraform
+check_cmd unzip
 
 echo ""
 echo "Results: $PASS passed, $FAIL failed"
