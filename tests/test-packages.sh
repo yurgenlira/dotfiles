@@ -60,7 +60,7 @@ echo ""
 echo "=== Testing commands are available ==="
 check_cmd age-keygen
 check_cmd antigravity
-if [ "${SKIP_SNAP_TESTS:-false}" != "true" ]; then
+if [ "${SKIP_GUI_TESTS:-false}" != "true" ]; then
     check_cmd aws
 fi
 check_cmd bw
